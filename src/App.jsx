@@ -31,7 +31,7 @@ function App() {
     return hours + ":" + minutes + ":" + seconds;
   }
 
-  const defaultIncrements = [{ time: 2, measurement: 'mins', add: true }, { time: 1, measurement: 'mins', add: true }, { time: 30, measurement: 'secs', add: true }, { time: 15, measurement: 'secs', add: true }, { time: 2, measurement: 'secs', add: true }, { time: 1, measurement: 'secs', add: true }]
+  const defaultIncrements = [{ time: 2, measurement: 'mins', add: true }, { time: 1, measurement: 'mins', add: true }, { time: 30, measurement: 'secs', add: true }, { time: 15, measurement: 'secs', add: true }, { time: 10, measurement: 'secs', add: true }, { time: 5, measurement: 'secs', add: true }, { time: 2, measurement: 'secs', add: true }, { time: 1, measurement: 'secs', add: true }]
 
   const [totalTime, setTotalTime] = useState(defaultTimer.totalTime)
   const [increments, setIncrements] = useState(defaultIncrements)
