@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 
 function App() {
   const defaultTimer = {
-    playing: true,
+    playing: false,
     time: 130000,
     totalTime: 130000,
   }
@@ -34,14 +34,12 @@ function App() {
   const defaultIncrements = [{ time: 2, measurement: 'mins', add: true }, { time: 1, measurement: 'mins', add: true }, { time: 30, measurement: 'secs', add: true }, { time: 15, measurement: 'secs', add: true }, { time: 2, measurement: 'secs', add: true }, { time: 1, measurement: 'secs', add: true }]
 
   const [totalTime, setTotalTime] = useState(defaultTimer.totalTime)
+  const [increments, setIncrements] = useState(defaultIncrements)
   const [playing, setPlaying] = useState(defaultTimer.playing)
   const [time, setTime] = useState(defaultTimer.time)
-  const [timerInterval, setTimerInterval] = useState(null)
-  const [increments, setIncrements] = useState(defaultIncrements)
+  const [timePassed, setTimePassed] = useState(0)
 
   const changeTime = (amount, add) => {
-    // console.error('changing')
-    // console.error(time)
     setTime(eval(`${time}${add ? '+' : '-'}${amount}`))
   }
 
@@ -50,22 +48,27 @@ function App() {
   }
 
   const startStopTimer = () => {
-    console.error(playing)
-    setPlaying(!playing)
 
     if (!playing) {
-      clearInterval(timerInterval)
-      console.error('stopping it')
+      setPlaying(true)
+      setTimePassed(1)
     } else {
-      console.error('start it')
-      const interval = setInterval(() => changeTime(1000, false), 1000)
-      setTimerInterval(interval)
+      setPlaying(false)
     }
+    setPlaying(!playing)
+
   }
 
-  useEffect(() => { 
-    console.error(time)
-  },[time])
+  useEffect(() => {
+    if (!playing) return
+
+    const interval = setInterval(() => {
+      setTimePassed(timePassed + 1000);
+    }, 1000);
+
+    return () => clearInterval(interval);
+
+  }, [timePassed])
 
   return (
     <main className="h-screen w-screen overflow-hidden bg-gray-800 flex justify-center">
@@ -73,8 +76,9 @@ function App() {
       <div className="flex max-w-screen-lg w-full h-full p-8 md:items-center">
         <section className="w-full border border-white border-4 rounded-2xl flex flex-col text-white p-8 h-fit items-center gap-10">
 
-          <div className='flex items-baseline gap-3'><h1 className="text-8xl font-semibold">{msToTime(time)}</h1><p className='text-blue-500 underline cursor-pointer font-semibold'>Edit</p> </div>
+          <div className='flex items-baseline gap-3'><h1 className="text-8xl font-semibold">{msToTime(time - timePassed)}</h1><p className='text-blue-500 underline cursor-pointer font-semibold'>Edit</p> </div>
           <p onClick={() => startStopTimer()} className='text-blue-500 underline cursor-pointer font-semibold'>Play</p>
+          <p>totalTime {msToTime(time)}</p>
 
 
           <div className='flex flex-col w-full gap-5'>
@@ -87,7 +91,7 @@ function App() {
             <div className="flex gap-5">
               {increments.map((increment, index) => {
                 return (
-                  <div key={`${index}_increment`} onClick={() => changeTime(time + timeToMS(increment.measurement, increment.time))} className="flex items-center justify-center rounded-full border border-white h-[70px] w-[70px] text-xl font-medium select-none hover:bg-white hover:border-gray-800 hover:text-gray-800 cursor-pointer transition">{increment.add ? '+' : '-'}{increment.time}{increment.measurement.charAt(0)}</div>
+                  <div key={`${index}_increment`} onClick={() => changeTime(timeToMS(increment.measurement, increment.time), increment.add) } className="flex items-center justify-center rounded-full border border-white h-[70px] w-[70px] text-xl font-medium select-none hover:bg-white hover:border-gray-800 hover:text-gray-800 cursor-pointer transition">{increment.add ? '+' : '-'}{increment.time}{increment.measurement.charAt(0)}</div>
                 )
               })}
             </div>
