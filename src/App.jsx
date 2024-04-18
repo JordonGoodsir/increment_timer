@@ -1,5 +1,6 @@
 import './App.css'
 import { useState, useEffect } from 'react'
+import EditTimeModal from './components/EditTimeModal'
 
 function App() {
   const defaultTimer = {
@@ -18,7 +19,7 @@ function App() {
     }
   }
 
-  function msToTime(duration) {
+  function msToTime(duration, object = false) {
 
     let seconds = Math.floor((duration / 1000) % 60),
       minutes = Math.floor((duration / (1000 * 60)) % 60),
@@ -28,16 +29,24 @@ function App() {
     minutes = (minutes < 10) ? "0" + minutes : minutes;
     seconds = (seconds < 10) ? "0" + seconds : seconds;
 
+    if(object) { 
+      return {hours, minutes, seconds}
+    } 
+
     return hours + ":" + minutes + ":" + seconds;
   }
 
+
+  //Increments
   const defaultIncrements = [{ time: 2, measurement: 'mins', add: true }, { time: 1, measurement: 'mins', add: true }, { time: 30, measurement: 'secs', add: true }, { time: 15, measurement: 'secs', add: true }, { time: 10, measurement: 'secs', add: true }, { time: 5, measurement: 'secs', add: true }, { time: 2, measurement: 'secs', add: true }, { time: 1, measurement: 'secs', add: true }]
 
-  const [totalTime, setTotalTime] = useState(defaultTimer.totalTime)
   const [increments, setIncrements] = useState(defaultIncrements)
+
+  // Timer
   const [playing, setPlaying] = useState(defaultTimer.playing)
   const [time, setTime] = useState(defaultTimer.time)
   const [timePassed, setTimePassed] = useState(0)
+  const [totalTime, setTotalTime] = useState(defaultTimer.totalTime)
 
   const changeTime = (amount, add) => {
     setTime(eval(`${time}${add ? '+' : '-'}${amount}`))
@@ -70,6 +79,10 @@ function App() {
 
   }, [timePassed])
 
+  //modal
+
+  const [modalOpen, setModalOpen] = useState(true)
+
   return (
     <main className="h-screen w-screen overflow-hidden bg-gray-800 flex justify-center">
 
@@ -91,7 +104,7 @@ function App() {
             <div className="flex gap-5">
               {increments.map((increment, index) => {
                 return (
-                  <div key={`${index}_increment`} onClick={() => changeTime(timeToMS(increment.measurement, increment.time), increment.add) } className="flex items-center justify-center rounded-full border border-white h-[70px] w-[70px] text-xl font-medium select-none hover:bg-white hover:border-gray-800 hover:text-gray-800 cursor-pointer transition">{increment.add ? '+' : '-'}{increment.time}{increment.measurement.charAt(0)}</div>
+                  <div key={`${index}_increment`} onClick={() => changeTime(timeToMS(increment.measurement, increment.time), increment.add)} className="flex items-center justify-center rounded-full border border-white h-[70px] w-[70px] text-xl font-medium select-none hover:bg-white hover:border-gray-800 hover:text-gray-800 cursor-pointer transition">{increment.add ? '+' : '-'}{increment.time}{increment.measurement.charAt(0)}</div>
                 )
               })}
             </div>
@@ -101,6 +114,7 @@ function App() {
 
       </div>
 
+      <EditTimeModal currentTime={msToTime(time, true)} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </main>
   )
 }
