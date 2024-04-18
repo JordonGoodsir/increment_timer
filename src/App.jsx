@@ -12,7 +12,7 @@ function App() {
   const timeToMS = (measurement, time) => {
     if (measurement === 'hours') {
       return time * 1000 * 60 * 60
-    } else if (measurement === 'mins') {
+    } else if (measurement === 'minutes') {
       return time * 1000 * 60
     } else {
       return time * 1000
@@ -29,16 +29,16 @@ function App() {
     minutes = (minutes < 10) ? "0" + minutes : minutes;
     seconds = (seconds < 10) ? "0" + seconds : seconds;
 
-    if(object) { 
-      return {hours, minutes, seconds}
-    } 
+    if (object) {
+      return { hours, minutes, seconds }
+    }
 
     return hours + ":" + minutes + ":" + seconds;
   }
 
 
   //Increments
-  const defaultIncrements = [{ time: 2, measurement: 'mins', add: true }, { time: 1, measurement: 'mins', add: true }, { time: 30, measurement: 'secs', add: true }, { time: 15, measurement: 'secs', add: true }, { time: 10, measurement: 'secs', add: true }, { time: 5, measurement: 'secs', add: true }, { time: 2, measurement: 'secs', add: true }, { time: 1, measurement: 'secs', add: true }]
+  const defaultIncrements = [{ time: 2, measurement: 'minutes', add: true }, { time: 1, measurement: 'minutes', add: true }, { time: 30, measurement: 'secs', add: true }, { time: 15, measurement: 'secs', add: true }, { time: 10, measurement: 'secs', add: true }, { time: 5, measurement: 'secs', add: true }, { time: 2, measurement: 'secs', add: true }, { time: 1, measurement: 'secs', add: true }]
 
   const [increments, setIncrements] = useState(defaultIncrements)
 
@@ -81,7 +81,7 @@ function App() {
 
   //modal
 
-  const [modalOpen, setModalOpen] = useState(true)
+  const [modalOpen, setModalOpen] = useState(false)
 
   return (
     <main className="h-screen w-screen overflow-hidden bg-gray-800 flex justify-center">
@@ -89,7 +89,7 @@ function App() {
       <div className="flex max-w-screen-lg w-full h-full p-8 md:items-center">
         <section className="w-full border border-white border-4 rounded-2xl flex flex-col text-white p-8 h-fit items-center gap-10">
 
-          <div className='flex items-baseline gap-3'><h1 className="text-8xl font-semibold">{msToTime(time - timePassed)}</h1><p className='text-blue-500 underline cursor-pointer font-semibold'>Edit</p> </div>
+          <div className='flex items-baseline gap-3'><h1 className="text-8xl font-semibold">{msToTime(time - timePassed)}</h1><p className='text-blue-500 underline cursor-pointer font-semibold' onClick={() => setModalOpen(true)}>Edit</p> </div>
           <p onClick={() => startStopTimer()} className='text-blue-500 underline cursor-pointer font-semibold'>Play</p>
           <p>totalTime {msToTime(time)}</p>
 
@@ -114,7 +114,7 @@ function App() {
 
       </div>
 
-      <EditTimeModal currentTime={msToTime(time, true)} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <EditTimeModal setNewTime={(amount, add) => changeTime(amount, add)} currentTime={msToTime(time, true)} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </main>
   )
 }

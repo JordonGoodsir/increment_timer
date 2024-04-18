@@ -2,8 +2,6 @@ import Button from "./Button"
 
 
 function RulesModal({ onClose, isOpen, content }) {
-    console.error(onClose)
-
     if (isOpen) {
         return (
             <div className="fixed h-full w-full top-0 flex lg:items-center lg:justify-center">
