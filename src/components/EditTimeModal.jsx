@@ -30,9 +30,9 @@ function EditTimeModal(props) {
         return (
             <div className="flex flex-col">
                 <div className="flex gap-5">
-                    {timeMeasurements.map((measurement) => {
+                    {timeMeasurements.map((measurement, index) => {
                         return (
-                            <div className="flex flex-col">
+                            <div key={`${measurement}_${index}`} className="flex flex-col">
                                 <input className="border-gray-800 border rounded-sm p-1 w-16" type="number" max={measurement.max} min={0} value={props.currentTime[measurement.name]} onChange={(e) => handleInput(e, measurement.name)} />
                                 <p>{measurement.label}</p>
                             </div>
