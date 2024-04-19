@@ -49,11 +49,11 @@ const incrementsForm = (props) => {
                 return (
                     <div key={`${increment}_${index}`} className="flex gap-5 items-baseline">
                         <select className="border-gray-800 border rounded-sm p-1 w-16" value={increment.add} name="add" onChange={(e) => updateIncrementField(e, index)}>
-                            {addOptions.map((option) => <option value={option.value}>{option.name}</option>)}
+                            {addOptions.map((option) => <option key={option.name} value={option.value}>{option.name}</option>)}
                         </select>
                         <input className="border-gray-800 border rounded-sm p-1 w-16" type="number" value={increment.time} name="time" onChange={(e) => updateIncrementField(e, index)} />
                         <select className="border-gray-800 border rounded-sm p-1 w-25" value={increment.measurement} name="measurement" onChange={(e) => updateIncrementField(e, index)}>
-                            {measurementOptions.map((option) => <option value={option.value}>{option.name}</option>)}
+                            {measurementOptions.map((option) => <option key={option.name} value={option.value}>{option.name}</option>)}
                         </select>
                         <p className='text-blue-500 underline cursor-pointer font-semibold' onClick={() => deleteIncrement(index)}>Delete</p>
                     </div>

@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
 import Modal from "./utils/Modal"
+import { useSelector } from 'react-redux'
 
+const timeInputs = (setNewTime) => {
+    const timerStore = useSelector((state) => state.timerStore)
+    const test = msToTime(timerStore.time, true)
+    const [currentTime, setCurrentTime] = useState(test)
 
-const timeInputs = (initTime, setNewTime) => {
-    const [currentTime, setCurrentTime] = useState(initTime)
     const timeMeasurements = [
         { label: 'Hrs', max: 24, name: 'hours' },
         { label: 'Mins', max: 59, name: 'minutes' },
@@ -20,30 +23,46 @@ const timeInputs = (initTime, setNewTime) => {
         }
     }
 
-    useEffect(() => {
+    function msToTime(duration, object = false) {
+        let seconds = Math.floor((duration / 1000) % 60),
+          minutes = Math.floor((duration / (1000 * 60)) % 60),
+          hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+    
+        if (object) {
+          return { hours, minutes, seconds }
+        }
+    
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        seconds = (seconds < 10) ? "0" + seconds : seconds;
+    
+        return hours + ":" + minutes + ":" + seconds;
+      }
+
+    const handleInput = (event, measurement) => {
         const timeMeasurements = [
             { label: 'Hrs', max: 24, name: 'hours' },
             { label: 'Mins', max: 59, name: 'minutes' },
             { label: 'Secs', max: 59, name: 'seconds' }
         ]
 
-        const newTime = timeMeasurements.reduce((newTime, currentMeasurement) => {
-            newTime += timeToMS(currentMeasurement.name, currentTime[currentMeasurement.name])
-
-            return newTime
-        }, 0)
-
-        setNewTime(newTime)
-    }, [currentTime])
-
-    const handleInput = (event, measurement) => {
         let newVal = event.target.value
         const currentMeasurement = timeMeasurements.findIndex((val) => val.name === measurement)
         if (newVal > timeMeasurements[currentMeasurement].max) newVal = timeMeasurements[currentMeasurement].max
         else if (newVal < 0) newVal = 0
-        const newTimes = { ...currentTime, [measurement]: newVal }
 
+        // add to local state
+        const newTimes = { ...currentTime, [measurement]: newVal }
         setCurrentTime(newTimes)
+
+        // add to global state
+        const totalTime = timeMeasurements.reduce((newTime, currentMeasurement) => {
+            newTime += timeToMS(currentMeasurement.name, newTimes[currentMeasurement.name])
+
+            return newTime
+        }, 0)
+
+        setNewTime(totalTime)
     }
 
     return (
@@ -63,13 +82,10 @@ const timeInputs = (initTime, setNewTime) => {
 }
 
 function EditTimeModal(props) {
-
-    const initTime = props.currentTime
-
     const ModalContent = () => {
         return (
             <div className="flex flex-col">
-                {timeInputs(initTime, props.setNewTime)}
+                {timeInputs(props.setNewTime)}
             </div>
         )
     }
@@ -77,7 +93,6 @@ function EditTimeModal(props) {
     return (
         <Modal onClose={props.onClose} isOpen={props.isOpen} content={<ModalContent />} />
     )
-
 }
 
 export default EditTimeModal

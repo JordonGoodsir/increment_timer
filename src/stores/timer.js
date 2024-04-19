@@ -3,14 +3,14 @@ import { createSlice } from '@reduxjs/toolkit'
 export const timer = createSlice({
     name: 'timer',
     initialState: {
-        time: 0,
+        time: 130000,
     },
     reducers: {
         setNewTime: (state, newTime) => {
-            state.time = newTime
+            state.time = newTime.payload
         },
-        changeTime: (amount, add) => {
-            state.time = eval(`${state.time}${add ? '+' : '-'}${amount}`)
+        changeTime: (state, options) => {
+            state.time = eval(`${state.time}${options.payload.add ? '+' : '-'}${options.payload.amount}`)
         }
     },
 })

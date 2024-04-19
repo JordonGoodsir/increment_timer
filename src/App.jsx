@@ -3,15 +3,11 @@ import { useState, useEffect } from 'react'
 import EditTimeModal from './components/EditTimeModal'
 import EditIncrementsModal from './components/EditIncrementsModal'
 import { useDispatch, useSelector } from 'react-redux'
-
-
+import { setNewTime, changeTime } from './stores/timer'
 
 function App() {
   const timerStore = useSelector((state) => state.timerStore)
-
-  console.error(timerStore.time)
-
-
+  const dispatch = useDispatch()
 
   const defaultTimer = {
     playing: false,
@@ -51,17 +47,8 @@ function App() {
 
   // Timer
   const [playing, setPlaying] = useState(defaultTimer.playing)
-  const [time, setTime] = useState(defaultTimer.time)
   const [timePassed, setTimePassed] = useState(0)
   const [totalTime, setTotalTime] = useState(defaultTimer.totalTime)
-
-  const changeTime = (amount, add) => {
-    setTime(eval(`${time}${add ? '+' : '-'}${amount}`))
-  }
-
-  const setNewTime = (newTime) => {
-    setTime(newTime)
-  }
 
   const startStopTimer = () => {
 
@@ -96,9 +83,9 @@ function App() {
       <div className="flex max-w-screen-lg w-full h-full p-8 md:items-center">
         <section className="w-full border border-white border-4 rounded-2xl flex flex-col text-white p-8 h-fit items-center gap-10">
 
-          <div className='flex items-baseline gap-3'><h1 className="text-8xl font-semibold">{msToTime(time - timePassed)}</h1><p className='text-blue-500 underline cursor-pointer font-semibold' onClick={() => setModalOpen(true)}>Edit</p> </div>
+          <div className='flex items-baseline gap-3'><h1 className="text-8xl font-semibold">{msToTime(timerStore.time - timePassed)}</h1><p className='text-blue-500 underline cursor-pointer font-semibold' onClick={() => setModalOpen(true)}>Edit</p> </div>
           <p onClick={() => startStopTimer()} className='text-blue-500 underline cursor-pointer font-semibold'>Play</p>
-          <p>totalTime {msToTime(time)}</p>
+          <p>totalTime {msToTime(timerStore.time)}</p>
 
           <div className='flex flex-col w-full gap-5'>
             <div className="flex flex-col w-fit">
@@ -111,7 +98,7 @@ function App() {
             <div className="flex gap-5">
               {increments.map((increment, index) => {
                 return (
-                  <div key={`${index}_increment`} onClick={() => changeTime(timeToMS(increment.measurement, increment.time), increment.add)} className="flex items-center justify-center rounded-full border border-white h-[70px] w-[70px] text-xl font-medium select-none hover:bg-white hover:border-gray-800 hover:text-gray-800 cursor-pointer transition">{increment.add ? '+' : '-'}{increment.time}{increment.measurement.charAt(0)}</div>
+                  <div key={`${index}_increment`} onClick={() => dispatch(changeTime({ amount: timeToMS(increment.measurement, increment.time), add: increment.add }))} className="flex items-center justify-center rounded-full border border-white h-[70px] w-[70px] text-xl font-medium select-none hover:bg-white hover:border-gray-800 hover:text-gray-800 cursor-pointer transition">{increment.add ? '+' : '-'}{increment.time}{increment.measurement.charAt(0)}</div>
                 )
               })}
             </div>
@@ -120,8 +107,8 @@ function App() {
         </section>
       </div>
 
-      <EditTimeModal setNewTime={(newTime) => setNewTime(newTime)} currentTime={msToTime(time, true)} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
-      <EditIncrementsModal  isOpen={incrementsModalOpen} updateIncrements={(newIncrements) => setIncrements(newIncrements)} increments={increments} onClose={() => setIncrementsModalOpen(false)}/>
+      <EditTimeModal setNewTime={(newTime) => dispatch(setNewTime(newTime))} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <EditIncrementsModal isOpen={incrementsModalOpen} updateIncrements={(newIncrements) => setIncrements(newIncrements)} increments={increments} onClose={() => setIncrementsModalOpen(false)} />
     </main>
   )
 }
