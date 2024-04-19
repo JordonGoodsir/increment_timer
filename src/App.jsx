@@ -1,6 +1,7 @@
 import './App.css'
 import { useState, useEffect } from 'react'
 import EditTimeModal from './components/EditTimeModal'
+import EditIncrementsModal from './components/EditIncrementsModal'
 
 function App() {
   const defaultTimer = {
@@ -82,6 +83,8 @@ function App() {
   //modal
 
   const [modalOpen, setModalOpen] = useState(false)
+  const [incrementsModalOpen, setIncrementsModalOpen] = useState(false)
+
 
   return (
     <main className="h-screen w-screen overflow-hidden bg-gray-800 flex justify-center">
@@ -100,6 +103,7 @@ function App() {
                 Increments
               </h2>
               <div className='h-px w-[100%] bg-white translate-x-[35%]' />
+              <p className='text-blue-500 underline cursor-pointer font-semibold' onClick={() => setIncrementsModalOpen(true)}>Edit</p>
             </div>
             <div className="flex gap-5">
               {increments.map((increment, index) => {
@@ -114,7 +118,8 @@ function App() {
 
       </div>
 
-      <EditTimeModal setNewTime={(newTime) => setNewTime(newTime)} currentTime={{hours: 1, minutes: 1, seconds: 1}} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <EditTimeModal setNewTime={(newTime) => setNewTime(newTime)} currentTime={msToTime(time, true)} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <EditIncrementsModal  isOpen={incrementsModalOpen} updateIncrements={(newIncrements) => setIncrements(newIncrements)} increments={increments} onClose={() => setIncrementsModalOpen(false)}/>
     </main>
   )
 }
