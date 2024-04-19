@@ -19,17 +19,14 @@ const incrementsForm = (props) => {
 
     const updateIncrementField = (event, index) => {
         const { name: key, value: updatedValue } = event.target
-
         const updatedIncrement = updatedIncrements
         updatedIncrement[index][key] = updatedValue
-
         setUpdatedIncrements([...updatedIncrement])
     }
 
     const deleteIncrement = (index) => {
         const updatedIncrement = updatedIncrements
         updatedIncrement.splice(index, 1)
-
         setUpdatedIncrements([...updatedIncrement])
     }
 
@@ -39,11 +36,8 @@ const incrementsForm = (props) => {
     }
 
     const addIncrements = () => {
-
         const updatedIncrement = updatedIncrements
         updatedIncrement.push({ time: 5, measurement: 'secs', add: true })
-        console.error(updatedIncrement)
-
         setUpdatedIncrements([...updatedIncrement])
     }
 

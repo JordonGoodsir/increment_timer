@@ -21,7 +21,6 @@ function App() {
   }
 
   function msToTime(duration, object = false) {
-
     let seconds = Math.floor((duration / 1000) % 60),
       minutes = Math.floor((duration / (1000 * 60)) % 60),
       hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
@@ -37,10 +36,8 @@ function App() {
     return hours + ":" + minutes + ":" + seconds;
   }
 
-
   //Increments
   const defaultIncrements = [{ time: 2, measurement: 'minutes', add: true }, { time: 1, measurement: 'minutes', add: true }, { time: 30, measurement: 'secs', add: true }, { time: 15, measurement: 'secs', add: true }, { time: 10, measurement: 'secs', add: true }, { time: 5, measurement: 'secs', add: true }, { time: 2, measurement: 'secs', add: true }, { time: 1, measurement: 'secs', add: true }]
-
   const [increments, setIncrements] = useState(defaultIncrements)
 
   // Timer
@@ -81,10 +78,8 @@ function App() {
   }, [timePassed])
 
   //modal
-
   const [modalOpen, setModalOpen] = useState(false)
   const [incrementsModalOpen, setIncrementsModalOpen] = useState(false)
-
 
   return (
     <main className="h-screen w-screen overflow-hidden bg-gray-800 flex justify-center">
@@ -95,7 +90,6 @@ function App() {
           <div className='flex items-baseline gap-3'><h1 className="text-8xl font-semibold">{msToTime(time - timePassed)}</h1><p className='text-blue-500 underline cursor-pointer font-semibold' onClick={() => setModalOpen(true)}>Edit</p> </div>
           <p onClick={() => startStopTimer()} className='text-blue-500 underline cursor-pointer font-semibold'>Play</p>
           <p>totalTime {msToTime(time)}</p>
-
 
           <div className='flex flex-col w-full gap-5'>
             <div className="flex flex-col w-fit">
@@ -115,7 +109,6 @@ function App() {
 
           </div>
         </section>
-
       </div>
 
       <EditTimeModal setNewTime={(newTime) => setNewTime(newTime)} currentTime={msToTime(time, true)} isOpen={modalOpen} onClose={() => setModalOpen(false)} />

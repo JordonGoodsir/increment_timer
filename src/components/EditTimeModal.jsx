@@ -34,7 +34,6 @@ const timeInputs = (initTime, setNewTime) => {
         }, 0)
 
         setNewTime(newTime)
-
     }, [currentTime])
 
     const handleInput = (event, measurement) => {
