@@ -16,6 +16,6 @@ export const timer = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = score.actions
+export const { setNewTime, changeTime } = timer.actions
 
 export default timer.reducer

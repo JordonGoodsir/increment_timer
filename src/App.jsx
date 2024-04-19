@@ -2,8 +2,17 @@ import './App.css'
 import { useState, useEffect } from 'react'
 import EditTimeModal from './components/EditTimeModal'
 import EditIncrementsModal from './components/EditIncrementsModal'
+import { useDispatch, useSelector } from 'react-redux'
+
+
 
 function App() {
+  const timerStore = useSelector((state) => state.timerStore)
+
+  console.error(timerStore.time)
+
+
+
   const defaultTimer = {
     playing: false,
     time: 130000,
