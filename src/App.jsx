@@ -114,7 +114,7 @@ function App() {
 
       </div>
 
-      <EditTimeModal setNewTime={(amount, add) => changeTime(amount, add)} currentTime={msToTime(time, true)} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <EditTimeModal setNewTime={(newTime) => setNewTime(newTime)} currentTime={{hours: 1, minutes: 1, seconds: 1}} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </main>
   )
 }
