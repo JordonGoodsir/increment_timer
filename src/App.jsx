@@ -43,16 +43,88 @@ function App() {
 
   //Increments
   const defaultIncrements = [
+    // under 10 mins
     {
-      time: 2, measurement: 'minutes', add: true, conditions:
+      time: 10, measurement: 'seconds', add: true, conditions:
         [
-          { time: 5, measurement: 'seconds', operator: '>', comparison: '&&' },
-          { time: 10, measurement: 'secs', operator: '<' }
+          { time: 10, measurement: 'minutes', operator: '<', comparison: '&&' },
         ]
     },
     {
-      time: 2, measurement: 'minutes', add: true, conditions: []
-    }
+      time: 1, measurement: 'second', add: true, conditions:
+        [
+          { time: 10, measurement: 'minutes', operator: '<', comparison: '&&' },
+        ]
+    },
+    {
+      time: 2, measurement: 'minutes', add: true, conditions:
+        [
+          { time: 10, measurement: 'minutes', operator: '<', comparison: '&&' },
+        ]
+    },
+    {
+      time: 1, measurement: 'minutes', add: true, conditions:
+        [
+          { time: 10, measurement: 'minutes', operator: '<', comparison: '&&' },
+        ]
+    },
+
+    // over 10 mins less than 15 mins
+    {
+      time: 5, measurement: 'seconds', add: true, conditions:
+        [
+          { time: 10, measurement: 'minutes', operator: '>', comparison: '&&' },
+          { time: 15, measurement: 'minutes', operator: '<', comparison: '' },
+        ]
+    },
+    {
+      time: 1, measurement: 'second', add: true, conditions:
+        [
+          { time: 10, measurement: 'minutes', operator: '>', comparison: '&&' },
+          { time: 15, measurement: 'minutes', operator: '<', comparison: '' }
+        ]
+    },
+    {
+      time: 30, measurement: 'seconds', add: true, conditions:
+        [
+          { time: 10, measurement: 'minutes', operator: '>', comparison: '&&' },
+          { time: 15, measurement: 'minutes', operator: '<', comparison: '' },
+        ]
+    },
+    {
+      time: 15, measurement: 'second', add: true, conditions:
+        [
+          { time: 10, measurement: 'minutes', operator: '>', comparison: '&&' },
+          { time: 15, measurement: 'minutes', operator: '<', comparison: '' }
+        ]
+    },
+
+    // over 15 mins
+    {
+      time: 2, measurement: 'seconds', add: true, conditions:
+        [
+          { time: 15, measurement: 'minutes', operator: '>', comparison: '' },
+        ]
+    },
+    {
+      time: 1, measurement: 'second', add: true, conditions:
+        [
+          { time: 15, measurement: 'minutes', operator: '>', comparison: '' },
+        ]
+    },
+    {
+      time: 15, measurement: 'seconds', add: true, conditions:
+        [
+          { time: 15, measurement: 'minutes', operator: '>', comparison: '' },
+        ]
+    },
+    {
+      time: 5, measurement: 'second', add: true, conditions:
+        [
+          { time: 15, measurement: 'minutes', operator: '>', comparison: '' },
+        ]
+    },
+
   ]
   const [increments, setIncrements] = useState(defaultIncrements)
 
