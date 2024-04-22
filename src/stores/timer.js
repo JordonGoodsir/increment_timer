@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const timer = createSlice({
     name: 'timer',
     initialState: {
-        time: 130000,
+        time: 0,
     },
     reducers: {
         setNewTime: (state, newTime) => {
