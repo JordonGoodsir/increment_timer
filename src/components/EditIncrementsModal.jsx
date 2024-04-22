@@ -17,10 +17,26 @@ const incrementsForm = (props) => {
         { value: 'hours', name: 'Hours' },
     ]
 
-    const updateIncrementField = (event, index) => {
+    const operatorOptions = [
+        { value: '>', name: 'Greater than' },
+        { value: '<', name: 'Less than' },
+    ]
+
+    const comparisonOptions = [
+        { value: '&&', name: 'and' },
+        { value: '||', name: 'or' },
+    ]
+
+
+    const updateIncrementField = (event, index, conditionIndex) => {
         const { name: key, value: updatedValue } = event.target
         const updatedIncrement = updatedIncrements
-        updatedIncrement[index][key] = updatedValue
+
+        if (conditionIndex >= 0) {
+            updatedIncrement[index].conditions[conditionIndex][key]
+        } else {
+            updatedIncrement[index][key] = updatedValue
+        }
         setUpdatedIncrements([...updatedIncrement])
     }
 
@@ -47,15 +63,41 @@ const incrementsForm = (props) => {
 
             {updatedIncrements.map((increment, index) => {
                 return (
-                    <div key={`${increment}_${index}`} className="flex gap-5 items-baseline">
-                        <select className="border-gray-800 border rounded-sm p-1 w-16" value={increment.add} name="add" onChange={(e) => updateIncrementField(e, index)}>
-                            {addOptions.map((option) => <option key={option.name} value={option.value}>{option.name}</option>)}
-                        </select>
-                        <input className="border-gray-800 border rounded-sm p-1 w-16" type="number" value={increment.time} name="time" onChange={(e) => updateIncrementField(e, index)} />
-                        <select className="border-gray-800 border rounded-sm p-1 w-25" value={increment.measurement} name="measurement" onChange={(e) => updateIncrementField(e, index)}>
-                            {measurementOptions.map((option) => <option key={option.name} value={option.value}>{option.name}</option>)}
-                        </select>
-                        <p className='text-blue-500 underline cursor-pointer font-semibold' onClick={() => deleteIncrement(index)}>Delete</p>
+                    <div key={`${increment}_${index}`} className="flex flex-col gap-2">
+                        time option
+                        <div className="flex gap-5 items-baseline">
+                            <select className="border-gray-800 border rounded-sm p-1 w-16" value={increment.add} name="add" onChange={(e) => updateIncrementField(e, index)}>
+                                {addOptions.map((option) => <option key={option.name} value={option.value}>{option.name}</option>)}
+                            </select>
+                            <input className="border-gray-800 border rounded-sm p-1 w-16" type="number" value={increment.time} name="time" onChange={(e) => updateIncrementField(e, index)} />
+                            <select className="border-gray-800 border rounded-sm p-1 w-25" value={increment.measurement} name="measurement" onChange={(e) => updateIncrementField(e, index)}>
+                                {measurementOptions.map((option) => <option key={option.name} value={option.value}>{option.name}</option>)}
+                            </select>
+                            <p className='text-blue-500 underline cursor-pointer font-semibold' onClick={() => deleteIncrement(index)}>Delete</p>
+                        </div>
+
+                        render condition
+                        {increment.conditions.map((condition, conditionIndex) => {
+                            return (
+                                <div className="flex gap-5 items-baseline">
+                                    <select className="border-gray-800 border rounded-sm p-1 w-25" value={condition.operator} name="operator" onChange={(e) => updateIncrementField(e, index, conditionIndex)}>
+                                        {operatorOptions.map((option) => <option key={option.name} value={option.value}>{option.name}</option>)}
+                                    </select>
+                                    <input className="border-gray-800 border rounded-sm p-1 w-16" type="number" value={condition.time} name="time" onChange={(e) => updateIncrementField(e, index, conditionIndex)} />
+                                    <select className="border-gray-800 border rounded-sm p-1 w-25" value={condition.measurement} name="measurement" onChange={(e) => updateIncrementField(e, index, conditionIndex)}>
+                                        {measurementOptions.map((option) => <option key={option.name} value={option.value}>{option.name}</option>)}
+                                    </select>
+
+                                    {conditionIndex === 0 ? <select className="border-gray-800 border rounded-sm p-1 w-25" value={condition.comparison} name="comparison" onChange={(e) => updateIncrementField(e, index, conditionIndex)}>
+                                        {comparisonOptions.map((option) => <option key={option.name} value={option.value}>{option.name}</option>)}
+                                    </select>
+                                        : ''}
+
+
+                                </div>
+                            )
+                        })}
+
                     </div>
                 )
             })}
@@ -66,7 +108,6 @@ const incrementsForm = (props) => {
 
 
 }
-
 
 
 function EditIncrementsModal(props) {

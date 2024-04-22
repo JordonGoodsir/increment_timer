@@ -42,8 +42,51 @@ function App() {
   }
 
   //Increments
-  const defaultIncrements = [{ time: 2, measurement: 'minutes', add: true }, { time: 1, measurement: 'minutes', add: true }, { time: 30, measurement: 'secs', add: true }, { time: 15, measurement: 'secs', add: true }, { time: 10, measurement: 'secs', add: true }, { time: 5, measurement: 'secs', add: true }, { time: 2, measurement: 'secs', add: true }, { time: 1, measurement: 'secs', add: true }]
+  const defaultIncrements = [
+    {
+      time: 2, measurement: 'minutes', add: true, conditions:
+        [
+          { time: 5, measurement: 'seconds', operator: '>', comparison: '&&' },
+          { time: 10, measurement: 'secs', operator: '<' }
+        ]
+    },
+    { time: 2, measurement: 'minutes', add: true }]
   const [increments, setIncrements] = useState(defaultIncrements)
+
+  const shownIncrements = () => {
+
+    return increments.map((increment, index) => {
+      if (increment.conditions?.length) {
+
+        const equation = increment.conditions.reduce((eq, condition) => {
+
+          eq += timerStore.time
+          // time
+          eq += condition.operator
+          // time >
+          eq += timeToMS(condition.measurement, condition.time)
+          // time > specifiedTime
+          if (condition.comparison) eq += condition.comparison
+          // time > specifiedTime &&
+
+          return eq
+        }, '')
+
+        if (eval(equation)) {
+          return (
+            <div key={`${index}_increment`} onClick={() => dispatch(changeTime({ amount: timeToMS(increment.measurement, increment.time), add: increment.add }))} className="flex items-center justify-center rounded-full border border-white h-[70px] w-[70px] text-xl font-medium select-none hover:bg-white hover:border-gray-800 hover:text-gray-800 cursor-pointer transition">
+              {increment.add ? '+' : '-'}{increment.time}{increment.measurement.charAt(0)}
+            </div>
+          )
+        }
+      } else {
+        return <div key={`${index}_increment`} onClick={() => dispatch(changeTime({ amount: timeToMS(increment.measurement, increment.time), add: increment.add }))} className="flex items-center justify-center rounded-full border border-white h-[70px] w-[70px] text-xl font-medium select-none hover:bg-white hover:border-gray-800 hover:text-gray-800 cursor-pointer transition">
+          {increment.add ? '+' : '-'}{increment.time}{increment.measurement.charAt(0)}
+        </div>
+      }
+    })
+
+  }
 
   // Timer
   const [playing, setPlaying] = useState(defaultTimer.playing)
@@ -96,11 +139,7 @@ function App() {
               <p className='text-blue-500 underline cursor-pointer font-semibold' onClick={() => setIncrementsModalOpen(true)}>Edit</p>
             </div>
             <div className="flex gap-5">
-              {increments.map((increment, index) => {
-                return (
-                  <div key={`${index}_increment`} onClick={() => dispatch(changeTime({ amount: timeToMS(increment.measurement, increment.time), add: increment.add }))} className="flex items-center justify-center rounded-full border border-white h-[70px] w-[70px] text-xl font-medium select-none hover:bg-white hover:border-gray-800 hover:text-gray-800 cursor-pointer transition">{increment.add ? '+' : '-'}{increment.time}{increment.measurement.charAt(0)}</div>
-                )
-              })}
+              {shownIncrements()}
             </div>
 
           </div>
