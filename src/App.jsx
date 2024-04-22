@@ -50,7 +50,10 @@ function App() {
           { time: 10, measurement: 'secs', operator: '<' }
         ]
     },
-    { time: 2, measurement: 'minutes', add: true }]
+    {
+      time: 2, measurement: 'minutes', add: true, conditions: []
+    }
+  ]
   const [increments, setIncrements] = useState(defaultIncrements)
 
   const shownIncrements = () => {
@@ -66,7 +69,7 @@ function App() {
           // time >
           eq += timeToMS(condition.measurement, condition.time)
           // time > specifiedTime
-          if (condition.comparison) eq += condition.comparison
+          if (condition.comparison && increment.conditions.length > 1) eq += condition.comparison
           // time > specifiedTime &&
 
           return eq
