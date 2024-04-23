@@ -59,9 +59,16 @@ const visualTimer = (openModal) => {
   )
 }
 
-const shownIncrements = () => {
-  const time = useSelector((state) => state.timerStore).time
+function App() {
   const dispatch = useDispatch()
+
+  const setStoreTime = (newTime) => {
+    dispatch(setNewTime(newTime))
+  }
+
+  // increments
+  const [incrementsModalOpen, setIncrementsModalOpen] = useState(false)
+  const time = useSelector((state) => state.timerStore).time
 
   const timeToMS = (measurement, time) => {
     if (measurement === 'hours') {
@@ -159,63 +166,6 @@ const shownIncrements = () => {
   ]
 
   const [increments, setIncrements] = useState(defaultIncrements)
-  const [incrementsModalOpen, setIncrementsModalOpen] = useState(false)
-  return (
-    <div className='flex flex-col w-full gap-5'>
-      <div className="flex flex-col w-fit">
-        <h2 className="text-2xl font-semibold">
-          Increments
-        </h2>
-        <div className='h-px w-[100%] bg-white translate-x-[35%]' />
-        <p className='text-blue-500 underline cursor-pointer font-semibold' onClick={() => setIncrementsModalOpen(true)}>Edit</p>
-      </div>
-      <div className="flex gap-5">
-        {
-          increments.map((increment, index) => {
-            if (increment.conditions?.length) {
-
-              const equation = increment.conditions.reduce((eq, condition) => {
-
-                eq += time
-                // time
-                eq += condition.operator
-                // time >
-                eq += timeToMS(condition.measurement, condition.time)
-                // time > specifiedTime
-                if (condition.comparison && increment.conditions.length > 1) eq += condition.comparison
-                // time > specifiedTime &&
-
-                return eq
-              }, '')
-
-              if (eval(equation)) {
-                return (
-                  <div key={`${index}_increment`} onClick={() => dispatch(changeTime({ amount: timeToMS(increment.measurement, increment.time), add: increment.add }))} className="flex items-center justify-center rounded-full border border-white h-[70px] w-[70px] text-xl font-medium select-none hover:bg-white hover:border-gray-800 hover:text-gray-800 cursor-pointer transition">
-                    {increment.add ? '+' : '-'}{increment.time}{increment.measurement.charAt(0)}
-                  </div>
-                )
-              }
-            } else {
-              return <div key={`${index}_increment`} onClick={() => dispatch(changeTime({ amount: timeToMS(increment.measurement, increment.time), add: increment.add }))} className="flex items-center justify-center rounded-full border border-white h-[70px] w-[70px] text-xl font-medium select-none hover:bg-white hover:border-gray-800 hover:text-gray-800 cursor-pointer transition">
-                {increment.add ? '+' : '-'}{increment.time}{increment.measurement.charAt(0)}
-              </div>
-            }
-          })
-        }
-      </div>
-
-      <EditIncrementsModal isOpen={incrementsModalOpen} updateIncrements={(newIncrements) => setIncrements(newIncrements)} increments={increments} onClose={() => setIncrementsModalOpen(false)} />
-    </div>
-  )
-
-}
-
-function App() {
-  const dispatch = useDispatch()
-
-  const setStoreTime = (newTime) => {
-    dispatch(setNewTime(newTime))
-  }
 
   //modal
   const [modalOpen, setModalOpen] = useState(false)
@@ -227,11 +177,54 @@ function App() {
         <section className="w-full border border-white border-4 rounded-2xl flex flex-col text-white p-8 h-fit items-center gap-10">
           {visualTimer(() => setModalOpen(true))}
 
-          {shownIncrements()}
+          <div className='flex flex-col w-full gap-5'>
+            <div className="flex flex-col w-fit">
+              <h2 className="text-2xl font-semibold">
+                Increments
+              </h2>
+              <div className='h-px w-[100%] bg-white translate-x-[35%]' />
+              <p className='text-blue-500 underline cursor-pointer font-semibold' onClick={() => setIncrementsModalOpen(true)}>Edit</p>
+            </div>
+            <div className="flex gap-5">
+              {
+                increments.map((increment, index) => {
+                  if (increment.conditions?.length) {
+
+                    const equation = increment.conditions.reduce((eq, condition) => {
+
+                      eq += time
+                      // time
+                      eq += condition.operator
+                      // time >
+                      eq += timeToMS(condition.measurement, condition.time)
+                      // time > specifiedTime
+                      if (condition.comparison && increment.conditions.length > 1) eq += condition.comparison
+                      // time > specifiedTime &&
+
+                      return eq
+                    }, '')
+
+                    if (eval(equation)) {
+                      return (
+                        <div key={`${index}_increment`} onClick={() => dispatch(changeTime({ amount: timeToMS(increment.measurement, increment.time), add: increment.add }))} className="flex items-center justify-center rounded-full border border-white h-[70px] w-[70px] text-xl font-medium select-none hover:bg-white hover:border-gray-800 hover:text-gray-800 cursor-pointer transition">
+                          {increment.add ? '+' : '-'}{increment.time}{increment.measurement.charAt(0)}
+                        </div>
+                      )
+                    }
+                  } else {
+                    return <div key={`${index}_increment`} onClick={() => dispatch(changeTime({ amount: timeToMS(increment.measurement, increment.time), add: increment.add }))} className="flex items-center justify-center rounded-full border border-white h-[70px] w-[70px] text-xl font-medium select-none hover:bg-white hover:border-gray-800 hover:text-gray-800 cursor-pointer transition">
+                      {increment.add ? '+' : '-'}{increment.time}{increment.measurement.charAt(0)}
+                    </div>
+                  }
+                })
+              }
+            </div>
+          </div>
         </section>
       </div>
 
       <EditTimeModal setNewTime={(newTime) => setStoreTime(newTime)} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <EditIncrementsModal isOpen={incrementsModalOpen} updateIncrements={(newIncrements) => setIncrements(newIncrements)} increments={increments} onClose={() => setIncrementsModalOpen(false)} />
     </main>
   )
 }
