@@ -2,18 +2,11 @@ import { useEffect, useState } from "react"
 import Modal from "./utils/Modal"
 import { useSelector } from 'react-redux'
 
-const timeInputs = (setNewTime) => {
-    const timerStore = useSelector((state) => state.timerStore)
 
-    // useEffect(() => {
-    //     console.error('triggered')
-    //     // setCurrentTime(msToTime(Number(JSON.stringify(JSON.parse(timerStore.time)))))
+const timeInputs = (props) => {
+    const time = useSelector((state) => state.timerStore).time
 
-    //     setCurrentTime(msToTime(JSON.stringify(JSON.parse(timerStore.time)), true))
-    // }, [])
-    
-    
-    const test = msToTime(JSON.stringify(JSON.parse(timerStore.time)), true)
+    const test = msToTime(JSON.stringify(JSON.parse(time)), true)
     const [currentTime, setCurrentTime] = useState(test)
 
     const timeMeasurements = [
@@ -34,19 +27,19 @@ const timeInputs = (setNewTime) => {
 
     function msToTime(duration, object = false) {
         let seconds = Math.floor((duration / 1000) % 60),
-          minutes = Math.floor((duration / (1000 * 60)) % 60),
-          hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
-    
+            minutes = Math.floor((duration / (1000 * 60)) % 60),
+            hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
         if (object) {
-          return { hours, minutes, seconds }
+            return { hours, minutes, seconds }
         }
-    
+
         hours = (hours < 10) ? "0" + hours : hours;
         minutes = (minutes < 10) ? "0" + minutes : minutes;
         seconds = (seconds < 10) ? "0" + seconds : seconds;
-    
+
         return hours + ":" + minutes + ":" + seconds;
-      }
+    }
 
     const handleInput = (event, measurement) => {
         const timeMeasurements = [
@@ -71,7 +64,7 @@ const timeInputs = (setNewTime) => {
             return newTime
         }, 0)
 
-        setNewTime(totalTime)
+        props.setNewTime(totalTime)
     }
 
     return (
@@ -89,17 +82,18 @@ const timeInputs = (setNewTime) => {
 
 }
 
+const ModalContent = (setNewTime) => {
+    return (
+        <div className="flex flex-col">
+            {timeInputs(setNewTime)}
+        </div>
+    )
+}
+
 function EditTimeModal(props) {
-    const ModalContent = () => {
-        return (
-            <div className="flex flex-col">
-                {timeInputs(props.setNewTime)}
-            </div>
-        )
-    }
 
     return (
-        <Modal onClose={props.onClose} isOpen={props.isOpen} content={<ModalContent />} />
+        <Modal onClose={props.onClose} isOpen={props.isOpen} content={<ModalContent setNewTime={props.setNewTime} />} />
     )
 }
 
