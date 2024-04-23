@@ -3,10 +3,14 @@ import { useState, useEffect } from 'react'
 import EditTimeModal from './components/EditTimeModal'
 import EditIncrementsModal from './components/EditIncrementsModal'
 import { useDispatch, useSelector } from 'react-redux'
-import { setNewTime, changeTime } from './stores/timer'
+import { setNewTime, changeTime, setTimePassed } from './stores/timer'
 
 const visualTimer = (openModal) => {
+  const dispatch = useDispatch()
+
+
   const time = useSelector((state) => state.timerStore).time
+  const timePassed = useSelector((state) => state.timerStore).timePassed
 
   function msToTime(duration, object = false) {
     let seconds = Math.floor((duration / 1000) % 60),
@@ -25,13 +29,12 @@ const visualTimer = (openModal) => {
   }
 
   const [playing, setPlaying] = useState(false)
-  const [timePassed, setTimePassed] = useState(0)
 
   const startStopTimer = () => {
 
     if (!playing) {
       setPlaying(true)
-      setTimePassed(1)
+      dispatch(setTimePassed(1))
     } else {
       setPlaying(false)
     }
@@ -43,7 +46,7 @@ const visualTimer = (openModal) => {
     if (!playing || (time - timePassed) === 0) return
 
     const interval = setInterval(() => {
-      setTimePassed(timePassed + 1000);
+      dispatch(setTimePassed(timePassed + 1000));
     }, 1000);
 
     return () => clearInterval(interval);
@@ -69,6 +72,7 @@ function App() {
   // increments
   const [incrementsModalOpen, setIncrementsModalOpen] = useState(false)
   const time = useSelector((state) => state.timerStore).time
+  const timePassed = useSelector((state) => state.timerStore).timePassed
 
   const timeToMS = (measurement, time) => {
     if (measurement === 'hours') {
@@ -85,25 +89,25 @@ function App() {
     {
       time: 10, measurement: 'seconds', add: true, conditions:
         [
-          { time: 10, measurement: 'minutes', operator: '<', comparison: '&&' },
+          { time: 10, measurement: 'minutes', operator: '<=', comparison: '&&' },
         ]
     },
     {
       time: 1, measurement: 'second', add: true, conditions:
         [
-          { time: 10, measurement: 'minutes', operator: '<', comparison: '&&' },
+          { time: 10, measurement: 'minutes', operator: '<=', comparison: '&&' },
         ]
     },
     {
       time: 2, measurement: 'minutes', add: true, conditions:
         [
-          { time: 10, measurement: 'minutes', operator: '<', comparison: '&&' },
+          { time: 10, measurement: 'minutes', operator: '<=', comparison: '&&' },
         ]
     },
     {
       time: 1, measurement: 'minutes', add: true, conditions:
         [
-          { time: 10, measurement: 'minutes', operator: '<', comparison: '&&' },
+          { time: 10, measurement: 'minutes', operator: '<=', comparison: '&&' },
         ]
     },
 
@@ -111,29 +115,29 @@ function App() {
     {
       time: 5, measurement: 'seconds', add: true, conditions:
         [
-          { time: 10, measurement: 'minutes', operator: '>', comparison: '&&' },
-          { time: 15, measurement: 'minutes', operator: '<', comparison: '' },
+          { time: 10, measurement: 'minutes', operator: '>=', comparison: '&&' },
+          { time: 15, measurement: 'minutes', operator: '<=', comparison: '' },
         ]
     },
     {
       time: 1, measurement: 'second', add: true, conditions:
         [
-          { time: 10, measurement: 'minutes', operator: '>', comparison: '&&' },
-          { time: 15, measurement: 'minutes', operator: '<', comparison: '' }
+          { time: 10, measurement: 'minutes', operator: '>=', comparison: '&&' },
+          { time: 15, measurement: 'minutes', operator: '<=', comparison: '' }
         ]
     },
     {
       time: 30, measurement: 'seconds', add: true, conditions:
         [
-          { time: 10, measurement: 'minutes', operator: '>', comparison: '&&' },
-          { time: 15, measurement: 'minutes', operator: '<', comparison: '' },
+          { time: 10, measurement: 'minutes', operator: '>=', comparison: '&&' },
+          { time: 15, measurement: 'minutes', operator: '<=', comparison: '' },
         ]
     },
     {
       time: 15, measurement: 'second', add: true, conditions:
         [
-          { time: 10, measurement: 'minutes', operator: '>', comparison: '&&' },
-          { time: 15, measurement: 'minutes', operator: '<', comparison: '' }
+          { time: 10, measurement: 'minutes', operator: '>=', comparison: '&&' },
+          { time: 15, measurement: 'minutes', operator: '<=', comparison: '' }
         ]
     },
 
@@ -141,25 +145,25 @@ function App() {
     {
       time: 2, measurement: 'seconds', add: true, conditions:
         [
-          { time: 15, measurement: 'minutes', operator: '>', comparison: '' },
+          { time: 15, measurement: 'minutes', operator: '>=', comparison: '' },
         ]
     },
     {
       time: 1, measurement: 'second', add: true, conditions:
         [
-          { time: 15, measurement: 'minutes', operator: '>', comparison: '' },
+          { time: 15, measurement: 'minutes', operator: '>=', comparison: '' },
         ]
     },
     {
       time: 15, measurement: 'seconds', add: true, conditions:
         [
-          { time: 15, measurement: 'minutes', operator: '>', comparison: '' },
+          { time: 15, measurement: 'minutes', operator: '>=', comparison: '' },
         ]
     },
     {
       time: 5, measurement: 'second', add: true, conditions:
         [
-          { time: 15, measurement: 'minutes', operator: '>', comparison: '' },
+          { time: 15, measurement: 'minutes', operator: '>=', comparison: '' },
         ]
     },
 
@@ -192,7 +196,7 @@ function App() {
 
                     const equation = increment.conditions.reduce((eq, condition) => {
 
-                      eq += time
+                      eq += time - timePassed
                       // time
                       eq += condition.operator
                       // time >
