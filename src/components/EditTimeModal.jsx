@@ -4,7 +4,16 @@ import { useSelector } from 'react-redux'
 
 const timeInputs = (setNewTime) => {
     const timerStore = useSelector((state) => state.timerStore)
-    const test = msToTime(timerStore.time, true)
+
+    // useEffect(() => {
+    //     console.error('triggered')
+    //     // setCurrentTime(msToTime(Number(JSON.stringify(JSON.parse(timerStore.time)))))
+
+    //     setCurrentTime(msToTime(JSON.stringify(JSON.parse(timerStore.time)), true))
+    // }, [])
+    
+    
+    const test = msToTime(JSON.stringify(JSON.parse(timerStore.time)), true)
     const [currentTime, setCurrentTime] = useState(test)
 
     const timeMeasurements = [
@@ -67,7 +76,6 @@ const timeInputs = (setNewTime) => {
 
     return (
         <div className="flex gap-5">
-
             {timeMeasurements.map((measurement, index) => {
                 return (
                     <div key={`${measurement}_${index}`} className="flex flex-col">

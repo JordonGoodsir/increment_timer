@@ -9,12 +9,6 @@ function App() {
   const timerStore = useSelector((state) => state.timerStore)
   const dispatch = useDispatch()
 
-  const defaultTimer = {
-    playing: false,
-    time: 130000,
-    totalTime: 130000,
-  }
-
   const timeToMS = (measurement, time) => {
     if (measurement === 'hours') {
       return time * 1000 * 60 * 60
@@ -164,15 +158,14 @@ function App() {
   }
 
   // Timer
-  const [playing, setPlaying] = useState(defaultTimer.playing)
+  const [playing, setPlaying] = useState(false)
   const [timePassed, setTimePassed] = useState(0)
-  const [totalTime, setTotalTime] = useState(defaultTimer.totalTime)
 
   const startStopTimer = () => {
 
     if (!playing) {
       setPlaying(true)
-      setTimePassed(1)
+      setTimePassed(0.0)
     } else {
       setPlaying(false)
     }
@@ -181,7 +174,7 @@ function App() {
   }
 
   useEffect(() => {
-    if (!playing) return
+    if (!playing || (timerStore.time - timePassed) === 0) return
 
     const interval = setInterval(() => {
       setTimePassed(timePassed + 1000);
