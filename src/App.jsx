@@ -89,25 +89,25 @@ function App() {
     {
       time: 10, measurement: 'seconds', add: true, conditions:
         [
-          { time: 10, measurement: 'minutes', operator: '<=', comparison: '&&' },
+          { time: 10, measurement: 'minutes', operator: '<', comparison: '&&' },
         ]
     },
     {
       time: 1, measurement: 'second', add: true, conditions:
         [
-          { time: 10, measurement: 'minutes', operator: '<=', comparison: '&&' },
+          { time: 10, measurement: 'minutes', operator: '<', comparison: '&&' },
         ]
     },
     {
       time: 2, measurement: 'minutes', add: true, conditions:
         [
-          { time: 10, measurement: 'minutes', operator: '<=', comparison: '&&' },
+          { time: 10, measurement: 'minutes', operator: '<', comparison: '&&' },
         ]
     },
     {
       time: 1, measurement: 'minutes', add: true, conditions:
         [
-          { time: 10, measurement: 'minutes', operator: '<=', comparison: '&&' },
+          { time: 10, measurement: 'minutes', operator: '<', comparison: '&&' },
         ]
     },
 
@@ -116,28 +116,28 @@ function App() {
       time: 5, measurement: 'seconds', add: true, conditions:
         [
           { time: 10, measurement: 'minutes', operator: '>=', comparison: '&&' },
-          { time: 15, measurement: 'minutes', operator: '<=', comparison: '' },
+          { time: 15, measurement: 'minutes', operator: '<', comparison: '' },
         ]
     },
     {
       time: 1, measurement: 'second', add: true, conditions:
         [
           { time: 10, measurement: 'minutes', operator: '>=', comparison: '&&' },
-          { time: 15, measurement: 'minutes', operator: '<=', comparison: '' }
+          { time: 15, measurement: 'minutes', operator: '<', comparison: '' }
         ]
     },
     {
       time: 30, measurement: 'seconds', add: true, conditions:
         [
           { time: 10, measurement: 'minutes', operator: '>=', comparison: '&&' },
-          { time: 15, measurement: 'minutes', operator: '<=', comparison: '' },
+          { time: 15, measurement: 'minutes', operator: '<', comparison: '' },
         ]
     },
     {
       time: 15, measurement: 'second', add: true, conditions:
         [
           { time: 10, measurement: 'minutes', operator: '>=', comparison: '&&' },
-          { time: 15, measurement: 'minutes', operator: '<=', comparison: '' }
+          { time: 15, measurement: 'minutes', operator: '<', comparison: '' }
         ]
     },
 
